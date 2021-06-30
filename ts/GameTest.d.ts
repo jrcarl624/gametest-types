@@ -411,6 +411,12 @@ declare module "GameTest" {
     */
   getFenceConnectivity(location: Minecraft.BlockLocation): ScriptGameTestConnectivity;
   /**
+    *
+    *
+    *
+    */
+  getTestDirection(): number;
+  /**
     * @remarks
     * Kills all entities within the GameTest structure.
     *
@@ -461,6 +467,14 @@ declare module "GameTest" {
     */
   pulseRedstone(location: Minecraft.BlockLocation, duration: number): void;
   /**
+    *
+    * @param worldLocation 
+    *
+    *
+    * @throws This function can throw errors.
+    */
+  relativeBlockLocation(worldLocation: Minecraft.BlockLocation): Minecraft.BlockLocation;
+  /**
     * @remarks
     * From a BlockLocation, returns a new BlockLocation with coordinates relative to the current GameTest structure block. For example, the relative coordinates for the block above the structure block are (0, 1, 0). Rotation of the GameTest structure is also taken into account.
     *
@@ -470,7 +484,15 @@ declare module "GameTest" {
     *
     * @throws This function can throw errors.
     */
-  relativeLocation(worldLocation: Minecraft.BlockLocation): Minecraft.BlockLocation;
+  relativeLocation(worldLocation: Minecraft.Location): Minecraft.Location;
+  /**
+    *
+    * @param direction 
+    *
+    *
+    * @throws This function can throw errors.
+    */
+  rotateDirection(direction: number): number;
   /**
     * @remarks
     * Runs a specific callback after a specified delay of ticks
@@ -531,7 +553,7 @@ declare module "GameTest" {
     * Spawns an entity at a location.
     *
     * @param entityIdentifier Type of entity to create. If no namespace is provided, 'minecraft:' is assumed. Note that an optional initial spawn event can be specified between less than/greater than signs (e.g., namespace:entityType<spawnEvent>).
-    * @param location 
+    * @param location Location where the entity should be spawned.
     *
     * @returns The spawned entity. If the entity cannot be spawned, returns undefined.
     *
@@ -544,12 +566,19 @@ declare module "GameTest" {
     */
   spawn(entityIdentifier: string, location: Minecraft.BlockLocation): Minecraft.Entity;
   /**
+    * @remarks
+    * Spawns an entity at a location.
     *
-    * @param entityIdentifier 
-    * @param location 
+    * @param entityIdentifier Type of entity to create. If no namespace is provided, 'minecraft:' is assumed. Note that an optional initial spawn event can be specified between less than/greater than signs (e.g., namespace:entityType<spawnEvent>).
+    * @param location Location where the entity should be spawned.
     *
+    * @returns The spawned entity. If the entity cannot be spawned, returns undefined.
     *
     * @throws This function can throw errors.
+    * @example spawnAdultPig.js
+    * ```typescript
+    *    test.spawn("minecraft:pig<minecraft:ageable_grow_up>", new Location(1.5, 2, 1.5));
+    * ```
     */
   spawnAtLocation(entityIdentifier: string, location: Minecraft.Location): Minecraft.Entity;
   /**
@@ -585,12 +614,27 @@ declare module "GameTest" {
   spawnWithoutBehaviors(entityIdentifier: string, location: Minecraft.BlockLocation): Minecraft.Entity;
   /**
     *
+    * @param entityIdentifier 
     * @param location 
-    * @param fromFace 
-    * @param direction 
     *
     *
     * @throws This function can throw errors.
+    */
+  spawnWithoutBehaviorsAtLocation(entityIdentifier: string, location: Minecraft.Location): Minecraft.Entity;
+  /**
+    * @remarks
+    * Tests that a particular item entity is present at a particular location. If not, an exception is thrown.
+    *
+    * @param location BlockLocation containing a multiface block.
+    * @param fromFace Face to spread from. This face must already be set.
+    * @param direction Direction to spread. Use the Minecraft.Direction enum to specify a direction.
+    *
+    *
+    * @throws This function can throw errors.
+    * @example spreadFromFaceTowardDirection.js
+    * ```typescript
+    *    test.spreadFromFaceTowardDirection(new BlockLocation(1, 2, 1), Direction.south, Direction.down);
+    * ```
     */
   spreadFromFaceTowardDirection(location: Minecraft.BlockLocation, fromFace: number, direction: number): void;
   /**
@@ -700,10 +744,10 @@ declare module "GameTest" {
   succeedWhenEntityPresent(entityIdentifier: string, location: Minecraft.BlockLocation): void;
   /**
     * @remarks
-    * Forces an entity to walk to a particular location. Usually used in conjunction with methods like .spawnWithoutBehaviors to have more predictable mob behaviors.
+    * Forces a mob to walk to a particular location. Usually used in conjunction with methods like .spawnWithoutBehaviors to have more predictable mob behaviors. Mobs will stop navigation as soon as they intersect the target location.
     *
     * @param mob Mob entity to give orders to.
-    * @param location 
+    * @param location Location where the entity should be walk to.
     * @param speedModifier Adjustable modifier to the mob's walking speed.
     *
     *
@@ -711,15 +755,25 @@ declare module "GameTest" {
     */
   walkTo(mob: Minecraft.Entity, location: Minecraft.BlockLocation, speedModifier: number): void;
   /**
+    * @remarks
+    * Forces a mob to walk to a particular location. Usually used in conjunction with methods like .spawnWithoutBehaviors to have more predictable mob behaviors. Mobs will stop navigation as soon as they intersect the target location.
     *
-    * @param mob 
-    * @param location 
-    * @param speedModifier 
+    * @param mob Mob entity to give orders to.
+    * @param location Location where the entity should be walk to.
+    * @param speedModifier Adjustable modifier to the mob's walking speed.
     *
     *
     * @throws This function can throw errors.
     */
   walkToLocation(mob: Minecraft.Entity, location: Minecraft.Location, speedModifier: number): void;
+  /**
+    *
+    * @param relativeLocation 
+    *
+    *
+    * @throws This function can throw errors.
+    */
+  worldBlockLocation(relativeLocation: Minecraft.BlockLocation): Minecraft.BlockLocation;
   /**
     * @remarks
     * From a BlockLocation with coordinates relative to the GameTest structure block, returns a new BlockLocation with coordinates relative to world. Rotation of the GameTest structure is also taken into account.
@@ -730,7 +784,7 @@ declare module "GameTest" {
     *
     * @throws This function can throw errors.
     */
-  worldLocation(relativeLocation: Minecraft.BlockLocation): Minecraft.BlockLocation;
+  worldLocation(relativeLocation: Minecraft.Location): Minecraft.Location;
   }
   
   /** 
@@ -799,6 +853,15 @@ declare module "GameTest" {
     *
     */
   requiredSuccessfulAttempts(attemptCount: number): RegistrationBuilder;
+  /**
+    * @remarks
+    * If true, runs the test in all four rotations when run via /gametest runset.
+    *
+    * @param rotate 
+    *
+    *
+    */
+  rotateTest(rotate: boolean): RegistrationBuilder;
   /**
     * @remarks
     * Sets the number of ticks for a test to wait before executing when the structure is spawned.

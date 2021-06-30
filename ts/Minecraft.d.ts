@@ -563,6 +563,12 @@ declare module "Minecraft" {
   above(): BlockLocation;
   /**
     *
+    *
+    *
+    */
+  blocksBetween(): Array<any>;
+  /**
+    *
     * @param x 
     * @param y 
     * @param z 
@@ -3982,6 +3988,7 @@ declare module "Minecraft" {
       */
     "beforeChat": BeforeChatEventSignal
     /**
+      * This event is fired before an explosion occurs.
       */
     "beforeExplosion": BeforeExplosionEventSignal
     /**
@@ -3997,9 +4004,11 @@ declare module "Minecraft" {
       */
     "createEntity": EntityEventSignal
     /**
+      * This event fires for each BlockLocation destroyed by an explosion. It is fired after the blocks have already been destroyed.
       */
     "explodeBlock": ExplodeBlockSignal
     /**
+      * This event is fired after an explosion occurs.
       */
     "explosion": ExplosionEventSignal
     /**
@@ -11040,10 +11049,13 @@ declare module "Minecraft" {
     */
   equals(other: Location): boolean;
   /**
+    * @remarks
+    * Determines whether or not two Locations are considered to be near each other.
     *
-    * @param other 
-    * @param epsilon 
+    * @param other Other Location to compare this Location to.
+    * @param epsilon Maximum distance that the Locations can be from each other to be considered nearby.
     *
+    * @returns True if the two Locations are within epsilon distance of each other.
     *
     */
   isNear(other: Location, epsilon: number): boolean;

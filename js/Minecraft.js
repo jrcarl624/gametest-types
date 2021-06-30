@@ -826,6 +826,13 @@ above () {
 }
 /**
   *
+  * @method
+  * @returns {Array.<{any}>}
+  */
+blocksBetween () {
+}
+/**
+  *
   * @constructor
   * @param {number} x -  
   * @param {number} y -  
@@ -9720,6 +9727,7 @@ class Events {
       * @type {module:Minecraft~BeforeChatEventSignal}
       */
     /**
+      * This event is fired before an explosion occurs.
       * @name Events#beforeExplosion
       * @type {module:Minecraft~BeforeExplosionEventSignal}
       */
@@ -9739,10 +9747,12 @@ class Events {
       * @type {module:Minecraft~EntityEventSignal}
       */
     /**
+      * This event fires for each BlockLocation destroyed by an explosion. It is fired after the blocks have already been destroyed.
       * @name Events#explodeBlock
       * @type {module:Minecraft~ExplodeBlockSignal}
       */
     /**
+      * This event is fired after an explosion occurs.
       * @name Events#explosion
       * @type {module:Minecraft~ExplosionEventSignal}
       */
@@ -9779,6 +9789,7 @@ class Events {
         */
       this['beforeChat'];
       /**
+        * This event is fired before an explosion occurs.
         * 
         * @type {module:Minecraft~BeforeExplosionEventSignal}
         */
@@ -9802,11 +9813,13 @@ class Events {
         */
       this['createEntity'];
       /**
+        * This event fires for each BlockLocation destroyed by an explosion. It is fired after the blocks have already been destroyed.
         * 
         * @type {module:Minecraft~ExplodeBlockSignal}
         */
       this['explodeBlock'];
       /**
+        * This event is fired after an explosion occurs.
         * 
         * @type {module:Minecraft~ExplosionEventSignal}
         */
@@ -30103,10 +30116,11 @@ constructor (x, y, z) {
 equals (other) {
 }
 /**
+  * Determines whether or not two Locations are considered to be near each other.
   *
   * @method
-  * @param {module:Minecraft~Location} other -  
-  * @param {number} epsilon -  
+  * @param {module:Minecraft~Location} other - Other Location to compare this Location to. 
+  * @param {number} epsilon - Maximum distance that the Locations can be from each other to be considered nearby. 
   * @returns {boolean}
   */
 isNear (other, epsilon) {
